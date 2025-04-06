@@ -1,53 +1,56 @@
-# Next.js & HeroUI Template
+# GITEX Assistant
 
-This is a template for creating applications using Next.js 14 (app directory) and HeroUI (v2).
-
-[Try it on CodeSandbox](https://githubbox.com/heroui-inc/heroui/next-app-template)
+This application provides assistive information about GITEX exhibitors, allowing users to search and filter by sectors and other criteria.
 
 ## Technologies Used
 
 - [Next.js 14](https://nextjs.org/docs/getting-started)
-- [HeroUI v2](https://heroui.com/)
+- [Drizzle ORM](https://orm.drizzle.team/) - SQL ORM for TypeScript
+- [PostgreSQL](https://www.postgresql.org/) with pgvector extension for vector embeddings
+- [HeroUI v2](https://heroui.com/) - UI component library
 - [Tailwind CSS](https://tailwindcss.com/)
-- [Tailwind Variants](https://tailwind-variants.org)
 - [TypeScript](https://www.typescriptlang.org/)
 - [Framer Motion](https://www.framer.com/motion/)
-- [next-themes](https://github.com/pacocoursey/next-themes)
+- [Mistral AI](https://mistral.ai/) for embeddings
 
-## How to Use
+## Database Structure
 
-### Use the template with create-next-app
+The application uses PostgreSQL with the following schema:
 
-To create a new project based on this template using `create-next-app`, run the following command:
+- **Exhibitors**: Contains information about GITEX exhibitors
+- **Sectors**: Industry sectors with hierarchical parent-child relationships
+- **ExhibitorSectors**: Many-to-many relationship between exhibitors and sectors
+- **Embeddings**: Vector embeddings for exhibitor information to enable semantic search
+
+## Data Migration
+
+To migrate data from JSON files to the database:
+
+1. Set up your environment variables in `.env` (see `.env.example`)
+2. Run the database migrations: `bun run db:migrate`
+3. To migrate exhibitor and sector data: `bun run db:migrate-data`
+
+### Data Files
+
+- `data/gitex_exhibitors.json`: Contains exhibitor information
+- `data/gitex_sectors_flat.json`: Contains sector data with hierarchical relationships
+
+## Scripts
+
+- `db:generate`: Generate Drizzle migration files from schema changes
+- `db:migrate`: Apply database migrations
+- `db:migrate-data`: Import exhibitor and sector data from JSON files
+- `db:studio`: Launch Drizzle Studio to explore and modify database content
+- `dev`: Start the development server
+- `build`: Build the application for production
+- `start`: Run the production build
+
+## Development
 
 ```bash
-npx create-next-app -e https://github.com/heroui-inc/next-app-template
+# Install dependencies
+bun install
+
+# Run development server
+bun run dev
 ```
-
-### Install dependencies
-
-You can use one of them `npm`, `yarn`, `pnpm`, `bun`, Example using `npm`:
-
-```bash
-npm install
-```
-
-### Run the development server
-
-```bash
-npm run dev
-```
-
-### Setup pnpm (optional)
-
-If you are using `pnpm`, you need to add the following code to your `.npmrc` file:
-
-```bash
-public-hoist-pattern[]=*@heroui/*
-```
-
-After modifying the `.npmrc` file, you need to run `pnpm install` again to ensure that the dependencies are installed correctly.
-
-## License
-
-Licensed under the [MIT license](https://github.com/heroui-inc/next-app-template/blob/main/LICENSE).
