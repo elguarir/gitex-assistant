@@ -2,6 +2,7 @@
 import { Button } from "@heroui/button";
 import Link from "next/link";
 import { GithubIcon, LinkedInIcon, Logo } from "./icons";
+import { ThemeSwitch } from "./theme-switch";
 
 export default function SiteHeader() {
   return (
@@ -17,6 +18,7 @@ export default function SiteHeader() {
               <Logo />
             </Link>
             <div className="flex gap-3">
+              <ThemeSwitch />
               <Button isIconOnly variant="light">
                 <GithubIcon className="h-5 w-5" />
               </Button>

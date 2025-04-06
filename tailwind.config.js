@@ -67,6 +67,7 @@ const config = {
         radius: "0.01rem",
       },
     }),
+    require("@tailwindcss/typography"),
   ],
 };
 

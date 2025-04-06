@@ -2,6 +2,7 @@ import { Link } from "@heroui/link";
 import SiteHeader from "@/components/side-header";
 import { Button } from "@heroui/button";
 import { Metadata } from "next";
+import { GitexChat } from "./gitex-chat";
 
 export const metadata: Metadata = {
   title: "GitexAfrica - Guide",
@@ -21,30 +22,11 @@ export default function Home() {
         </div>
 
         <section className="overflow-x-hidden bg-white dark:bg-transparent min-h-dvh h-full">
-          <div className="relative mx-auto max-w-5xl px-6 py-28 lg:py-24">
-            <div className="relative z-10 mx-auto max-w-2xl text-center">
-              <h1 className="text-title text-balance text-4xl font-semibold md:text-5xl lg:text-6xl">
-                The only guide you need to Gitex Africa
-              </h1>
-              <p className="text-sm md:text-base mx-auto mt-8 max-w-2xl text-default-600 text-balance">
-                Gitex Africa is the largest tech and startup event in Africa,
-                bringing together innovators, entrepreneurs, and industry
-                leaders to showcase the latest advancements in technology and
-                business.
-              </p>
-              <Button
-                as={Link}
-                href="/sign-up"
-                size="md"
-                variant="solid"
-                color="primary"
-                className="mx-auto mt-8 w-fit"
-              >
-                <span>Get Started</span>
-              </Button>
+          <div className="relative mx-auto max-w-5xl px-4 py-16 lg:py-4">
+            <div className="relative z-10 mx-auto max-w-2xl">
+              <GitexChat />
             </div>
           </div>
-          <div className="mx-auto max-w-7xl"></div>
         </section>
       </main>
     </div>
