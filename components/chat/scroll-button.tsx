@@ -67,6 +67,7 @@ function ScrollButton({
         className
       )}
       onPress={handleScroll}
+      isIconOnly
       {...props}
     >
       <ChevronDown className="h-4 w-4" />

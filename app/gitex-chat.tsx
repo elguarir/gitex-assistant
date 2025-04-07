@@ -95,7 +95,7 @@ export function GitexChat() {
   }, []);
 
   return (
-    <div className="relative flex h-full w-full flex-col overflow-hidden">
+    <div className="flex h-full w-full flex-col overflow-hidden">
       <div className="flex w-full items-center justify-between p-3">
         <div />
         <Button size="sm" onPress={streamResponse} disabled={isStreaming}>
@@ -140,14 +140,6 @@ export function GitexChat() {
           );
         })}
       </ChatContainer>
-
-      <div className="absolute right-7 bottom-4">
-        <ScrollButton
-          containerRef={containerRef}
-          scrollRef={bottomRef}
-          isIconOnly
-        />
-      </div>
     </div>
   );
 }
