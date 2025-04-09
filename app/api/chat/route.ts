@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { db } from '@/lib/drizzle/db';
 import { cosineDistance, desc, gt, sql, ilike, and, SQL } from 'drizzle-orm';
 
-export const maxDuration = 240;
+export const maxDuration = 60;
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
