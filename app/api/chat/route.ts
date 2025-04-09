@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     When users ask about exhibitors or companies:
     1. ALWAYS use the searchExhibitors tool to find relevant information
     2. After getting the results, format them into a clear, readable response
-    3. summarize the results in a few sentences, for the descriptions for example don't list all the products and services, just summarize the main ones
+    3. summarize the results in a few sentences, summarize the descriptions example don't list all the products and services, just summarize the main ones
     5. if the user specifies a country or hall number make sure to use it in the filters in the searchExhibitors tool
     6. for the query, you can always use the user's query as a base and add more details to it, so the search is more accurate and can return more relevant results.
     
@@ -74,6 +74,7 @@ export async function POST(req: Request) {
         execute: async ({ query, country, hall, skip = 0 }) => {
           console.log(
             '🌐 Searching exhibitors with country:',
+            'query:',
             country,
             'hall:',
             hall,
@@ -115,10 +116,15 @@ async function searchExhibitors(
     }
 
     if (filters.hall) {
-      conditions.push(sql`${exhibitors.stand_number} ~* ${`Hall\\s*${filters.hall}\\b`}`);
+      conditions.push(
+        sql`(${exhibitors.stand_number} ~* ${`Hall\\s*${filters.hall}(\\b|$)`} OR ${exhibitors.stand_number} LIKE ${`%Hall ${filters.hall}%`})`
+      );
+      console.log(`🔍 Filtering stands for Hall ${filters.hall}`);
     }
 
     const skip = filters.skip || 0;
+
+    // Log the query preparation
 
     const similarExhibitors = await db
       .select({
@@ -137,6 +143,14 @@ async function searchExhibitors(
       .orderBy(desc(similarity))
       .limit(5)
       .offset(skip);
+
+    console.log(`🔍 Query returned ${similarExhibitors.length} results`);
+    if (similarExhibitors.length > 0) {
+      console.log(
+        '🔍 Sample stand_number formats:',
+        similarExhibitors.slice(0, 2).map(e => e.stand_number)
+      );
+    }
 
     return similarExhibitors.map(exhibitor => ({
       ...exhibitor,
