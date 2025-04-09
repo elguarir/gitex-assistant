@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { marked } from "marked";
-import { memo, useId, useMemo } from "react";
-import ReactMarkdown, { Components } from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { CodeBlock, CodeBlockCode } from "./code-block";
-import { cn } from "@heroui/theme";
-import { useTheme } from "next-themes";
+import { marked } from 'marked';
+import { memo, useId, useMemo } from 'react';
+import ReactMarkdown, { Components } from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { CodeBlock, CodeBlockCode } from './code-block';
+import { cn } from '@heroui/theme';
+import { useTheme } from 'next-themes';
 
 export type MarkdownProps = {
   children: string;
@@ -17,13 +17,13 @@ export type MarkdownProps = {
 
 function parseMarkdownIntoBlocks(markdown: string): string[] {
   const tokens = marked.lexer(markdown);
-  return tokens.map((token) => token.raw);
+  return tokens.map(token => token.raw);
 }
 
 function extractLanguage(className?: string): string {
-  if (!className) return "plaintext";
+  if (!className) return 'plaintext';
   const match = className.match(/language-(\w+)/);
-  return match ? match[1] : "plaintext";
+  return match ? match[1] : 'plaintext';
 }
 
 const INITIAL_COMPONENTS: Partial<Components> = {
@@ -35,10 +35,7 @@ const INITIAL_COMPONENTS: Partial<Components> = {
     if (isInline) {
       return (
         <span
-          className={cn(
-            "bg-default-200 rounded-sm px-1 font-mono text-sm",
-            className
-          )}
+          className={cn('bg-default-200 rounded-sm px-1 font-mono text-sm', className)}
           {...props}
         >
           {children}
@@ -78,7 +75,7 @@ const MemoizedMarkdownBlock = memo(
   }
 );
 
-MemoizedMarkdownBlock.displayName = "MemoizedMarkdownBlock";
+MemoizedMarkdownBlock.displayName = 'MemoizedMarkdownBlock';
 
 function MarkdownComponent({
   children,
@@ -104,6 +101,6 @@ function MarkdownComponent({
 }
 
 const Markdown = memo(MarkdownComponent);
-Markdown.displayName = "Markdown";
+Markdown.displayName = 'Markdown';
 
 export { Markdown };

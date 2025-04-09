@@ -1,14 +1,8 @@
-"use client";
+'use client';
 
-import { cn } from "@heroui/theme";
-import { Tooltip } from "@heroui/tooltip";
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { cn } from '@heroui/theme';
+import { Tooltip } from '@heroui/tooltip';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 
 type PromptInputContextType = {
   isLoading: boolean;
@@ -21,7 +15,7 @@ type PromptInputContextType = {
 
 const PromptInputContext = createContext<PromptInputContextType>({
   isLoading: false,
-  value: "",
+  value: '',
   setValue: () => {},
   maxHeight: 240,
   onSubmit: undefined,
@@ -31,7 +25,7 @@ const PromptInputContext = createContext<PromptInputContextType>({
 function usePromptInput() {
   const context = useContext(PromptInputContext);
   if (!context) {
-    throw new Error("usePromptInput must be used within a PromptInput");
+    throw new Error('usePromptInput must be used within a PromptInput');
   }
   return context;
 }
@@ -55,7 +49,7 @@ function PromptInput({
   onSubmit,
   children,
 }: PromptInputProps) {
-  const [internalValue, setInternalValue] = useState(value || "");
+  const [internalValue, setInternalValue] = useState(value || '');
 
   const handleChange = (newValue: string) => {
     setInternalValue(newValue);
@@ -73,14 +67,7 @@ function PromptInput({
           onSubmit,
         }}
       >
-        <div
-          className={cn(
-            "border-input bg-background rounded-3xl border p-2 shadow-xs",
-            className
-          )}
-        >
-          {children}
-        </div>
+        <div className={cn(className)}>{children}</div>
       </PromptInputContext.Provider>
     </>
   );
@@ -88,7 +75,7 @@ function PromptInput({
 
 export type PromptInputTextareaProps = {
   disableAutosize?: boolean;
-} & React.ComponentProps<"textarea">;
+} & React.ComponentProps<'textarea'>;
 
 function PromptInputTextarea({
   className,
@@ -103,15 +90,15 @@ function PromptInputTextarea({
     if (disableAutosize) return;
 
     if (!textareaRef.current) return;
-    textareaRef.current.style.height = "auto";
+    textareaRef.current.style.height = 'auto';
     textareaRef.current.style.height =
-      typeof maxHeight === "number"
+      typeof maxHeight === 'number'
         ? `${Math.min(textareaRef.current.scrollHeight, maxHeight)}px`
         : `min(${textareaRef.current.scrollHeight}px, ${maxHeight})`;
   }, [value, maxHeight, disableAutosize]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       onSubmit?.();
     }
@@ -122,10 +109,10 @@ function PromptInputTextarea({
     <textarea
       ref={textareaRef}
       value={value}
-      onChange={(e) => setValue(e.target.value)}
+      onChange={e => setValue(e.target.value)}
       onKeyDown={handleKeyDown}
       className={cn(
-        "text-primary min-h-[44px] w-full resize-none border-none bg-transparent shadow-none outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
+        'text-default-500 min-h-[10px] w-full resize-none border-none bg-transparent shadow-none outline-none focus-visible:ring-0 focus-visible:ring-offset-0',
         className
       )}
       rows={1}
@@ -137,13 +124,9 @@ function PromptInputTextarea({
 
 type PromptInputActionsProps = React.HTMLAttributes<HTMLDivElement>;
 
-function PromptInputActions({
-  children,
-  className,
-  ...props
-}: PromptInputActionsProps) {
+function PromptInputActions({ children, className, ...props }: PromptInputActionsProps) {
   return (
-    <div className={cn("flex items-center gap-2", className)} {...props}>
+    <div className={cn('flex items-center gap-2', className)} {...props}>
       {children}
     </div>
   );
@@ -158,8 +141,8 @@ function PromptInputAction({
   children,
   className,
   content,
-  placement = "top",
-  color = "default",
+  placement = 'top',
+  color = 'default',
   showArrow = true,
   ...props
 }: PromptInputActionProps) {
@@ -181,9 +164,4 @@ function PromptInputAction({
   );
 }
 
-export {
-  PromptInput,
-  PromptInputTextarea,
-  PromptInputActions,
-  PromptInputAction,
-};
+export { PromptInput, PromptInputTextarea, PromptInputActions, PromptInputAction };

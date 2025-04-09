@@ -1,8 +1,8 @@
-"use client";
-import { Button } from "@heroui/button";
-import Link from "next/link";
-import { GithubIcon, LinkedInIcon, Logo } from "./icons";
-import { ThemeSwitch } from "./theme-switch";
+'use client';
+import { Button } from '@heroui/button';
+import Link from 'next/link';
+import { GithubIcon, LinkedInIcon, Logo } from './icons';
+import { ThemeSwitch } from './theme-switch';
 
 export default function SiteHeader() {
   return (

@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { cn } from "@heroui/theme";
-import { useTheme } from "next-themes";
-import React, { useEffect, useState } from "react";
-import { codeToHtml } from "shiki";
+import { cn } from '@heroui/theme';
+import { useTheme } from 'next-themes';
+import React, { useEffect, useState } from 'react';
+import { codeToHtml } from 'shiki';
 
 export type CodeBlockProps = {
   children?: React.ReactNode;
@@ -14,8 +14,8 @@ function CodeBlock({ children, className, ...props }: CodeBlockProps) {
   return (
     <div
       className={cn(
-        "not-prose flex w-full flex-col overflow-clip border",
-        "border border-default-200 rounded-xl font-mono",
+        'not-prose flex w-full flex-col overflow-clip border',
+        'border border-default-200 rounded-xl font-mono',
         className
       )}
       {...props}
@@ -34,8 +34,8 @@ export type CodeBlockCodeProps = {
 
 function CodeBlockCode({
   code,
-  language = "tsx",
-  theme = "github-light",
+  language = 'tsx',
+  theme = 'github-light',
   className,
   ...props
 }: CodeBlockCodeProps) {
@@ -45,15 +45,15 @@ function CodeBlockCode({
   useEffect(() => {
     async function highlight() {
       if (!code) {
-        setHighlightedHtml("<pre><code></code></pre>");
+        setHighlightedHtml('<pre><code></code></pre>');
         return;
       }
       if (!resolvedTheme) return;
-      if (resolvedTheme === "dark") {
-        theme = "github-dark";
+      if (resolvedTheme === 'dark') {
+        theme = 'github-dark';
       }
-      if (resolvedTheme === "light") {
-        theme = "github-light";
+      if (resolvedTheme === 'light') {
+        theme = 'github-light';
       }
 
       const html = await codeToHtml(code, { lang: language, theme });
@@ -63,17 +63,13 @@ function CodeBlockCode({
   }, [code, language, theme, resolvedTheme]);
 
   const classNames = cn(
-    "w-full overflow-x-auto text-[13px] [&>pre]:px-4 [&>pre]:py-4 dark:bg-[#24292e]",
+    'w-full overflow-x-auto text-[13px] [&>pre]:px-4 [&>pre]:py-4 dark:bg-[#24292e]',
     className
   );
 
   // SSR fallback: render plain code if not hydrated yet
   return highlightedHtml ? (
-    <div
-      className={classNames}
-      dangerouslySetInnerHTML={{ __html: highlightedHtml }}
-      {...props}
-    />
+    <div className={classNames} dangerouslySetInnerHTML={{ __html: highlightedHtml }} {...props} />
   ) : (
     <div className={classNames} {...props}>
       <pre>
@@ -85,16 +81,9 @@ function CodeBlockCode({
 
 export type CodeBlockGroupProps = React.HTMLAttributes<HTMLDivElement>;
 
-function CodeBlockGroup({
-  children,
-  className,
-  ...props
-}: CodeBlockGroupProps) {
+function CodeBlockGroup({ children, className, ...props }: CodeBlockGroupProps) {
   return (
-    <div
-      className={cn("flex items-center justify-between", className)}
-      {...props}
-    >
+    <div className={cn('flex items-center justify-between', className)} {...props}>
       {children}
     </div>
   );

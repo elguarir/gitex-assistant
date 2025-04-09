@@ -1,25 +1,26 @@
-"use client";
+'use client';
 
-import { Button, ButtonProps } from "@heroui/button";
-import { cn } from "@heroui/theme";
-import { ChevronDown } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Button } from '@heroui/button';
+import { cn } from '@heroui/theme';
+import { ChevronDown } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export type ScrollButtonProps = {
   scrollRef: React.RefObject<HTMLElement | null>;
   containerRef: React.RefObject<HTMLElement | null>;
   className?: string;
   threshold?: number;
-} & ButtonProps;
+  variant?: 'solid' | 'ghost' | 'bordered' | 'light' | 'flat' | 'faded' | 'shadow';
+  size?: 'sm' | 'md' | 'lg';
+} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onClick'>;
 
 function ScrollButton({
   scrollRef,
   containerRef,
   className,
   threshold = 100,
-  variant = "bordered",
-  color = "default",
-  size = "sm",
+  variant = 'bordered',
+  size = 'sm',
   ...props
 }: ScrollButtonProps) {
   const [isVisible, setIsVisible] = useState(false);
@@ -35,13 +36,13 @@ function ScrollButton({
     const container = containerRef.current;
 
     if (container) {
-      container.addEventListener("scroll", handleScroll);
+      container.addEventListener('scroll', handleScroll);
       handleScroll();
     }
 
     return () => {
       if (container) {
-        container.removeEventListener("scroll", handleScroll);
+        container.removeEventListener('scroll', handleScroll);
       }
     };
   }, [containerRef, threshold]);
@@ -50,7 +51,7 @@ function ScrollButton({
     if (containerRef.current) {
       containerRef.current.scrollTo({
         top: containerRef.current.scrollHeight,
-        behavior: "smooth",
+        behavior: 'smooth',
       });
     }
   };
@@ -60,15 +61,14 @@ function ScrollButton({
       variant={variant}
       size={size}
       className={cn(
-        "rounded-full transition-all duration-150 ease-out",
+        'rounded-full',
         isVisible
-          ? "translate-y-0 scale-100 opacity-100"
-          : "pointer-events-none translate-y-4 scale-95 opacity-0",
+          ? 'translate-y-0 scale-100 opacity-100'
+          : 'pointer-events-none translate-y-4 scale-95 opacity-0',
         className
       )}
-      onPress={handleScroll}
       isIconOnly
-      {...props}
+      onPress={handleScroll}
     >
       <ChevronDown className="h-4 w-4" />
     </Button>

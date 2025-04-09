@@ -1,12 +1,9 @@
-"use client";
+'use client';
 
-import { cn } from "@heroui/theme";
-import { Children, useCallback, useEffect, useRef, useState } from "react";
+import { cn } from '@heroui/theme';
+import { Children, useCallback, useEffect, useRef, useState } from 'react';
 
-const useAutoScroll = (
-  containerRef: React.RefObject<HTMLDivElement | null>,
-  enabled: boolean
-) => {
+const useAutoScroll = (containerRef: React.RefObject<HTMLDivElement | null>, enabled: boolean) => {
   const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
   const lastScrollTopRef = useRef(0);
   const autoScrollingRef = useRef(false);
@@ -20,7 +17,7 @@ const useAutoScroll = (
   }, []);
 
   const scrollToBottom = useCallback(
-    (behavior: ScrollBehavior = "smooth") => {
+    (behavior: ScrollBehavior = 'smooth') => {
       const container = containerRef.current;
       if (!container) return;
 
@@ -56,10 +53,10 @@ const useAutoScroll = (
           autoScrollingRef.current = false;
           scrollTriggeredRef.current = false;
           clearTimeout(safetyTimeout);
-          container.removeEventListener("scrollend", handleScrollEnd);
+          container.removeEventListener('scrollend', handleScrollEnd);
         };
 
-        container.addEventListener("scrollend", handleScrollEnd, {
+        container.addEventListener('scrollend', handleScrollEnd, {
           once: true,
         });
       } catch (e) {
@@ -117,20 +114,20 @@ const useAutoScroll = (
       }
     };
 
-    container.addEventListener("scroll", handleScroll, { passive: true });
-    container.addEventListener("wheel", handleWheel, { passive: true });
-    container.addEventListener("touchstart", handleTouchStart, {
+    container.addEventListener('scroll', handleScroll, { passive: true });
+    container.addEventListener('wheel', handleWheel, { passive: true });
+    container.addEventListener('touchstart', handleTouchStart, {
       passive: true,
     });
-    container.addEventListener("touchmove", handleTouchMove, { passive: true });
-    container.addEventListener("touchend", handleTouchEnd, { passive: true });
+    container.addEventListener('touchmove', handleTouchMove, { passive: true });
+    container.addEventListener('touchend', handleTouchEnd, { passive: true });
 
     return () => {
-      container.removeEventListener("scroll", handleScroll);
-      container.removeEventListener("wheel", handleWheel);
-      container.removeEventListener("touchstart", handleTouchStart);
-      container.removeEventListener("touchmove", handleTouchMove);
-      container.removeEventListener("touchend", handleTouchEnd);
+      container.removeEventListener('scroll', handleScroll);
+      container.removeEventListener('wheel', handleWheel);
+      container.removeEventListener('touchstart', handleTouchStart);
+      container.removeEventListener('touchmove', handleTouchMove);
+      container.removeEventListener('touchend', handleTouchEnd);
     };
   }, [containerRef, enabled, autoScrollEnabled, isAtBottom]);
 
@@ -149,8 +146,8 @@ export type ChatContainerProps = {
   children: React.ReactNode;
   className?: string;
   autoScroll?: boolean;
-  scrollToRef?: React.RefObject<HTMLDivElement | null>;
-  ref?: React.RefObject<HTMLDivElement | null>;
+  scrollToRef?: React.RefObject<HTMLDivElement>;
+  ref?: React.RefObject<HTMLDivElement>;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 function ChatContainer({
@@ -197,7 +194,7 @@ function ChatContainer({
 
     const scrollHandler = () => {
       if (newMessageAdded) {
-        scrollToBottom("smooth");
+        scrollToBottom('smooth');
         setNewMessageAdded(false);
         contentChangedWithoutNewMessageRef.current = false;
       } else if (
@@ -206,7 +203,7 @@ function ChatContainer({
         !isScrolling &&
         !scrollTriggered
       ) {
-        scrollToBottom("smooth");
+        scrollToBottom('smooth');
         contentChangedWithoutNewMessageRef.current = false;
       }
     };
@@ -225,15 +222,13 @@ function ChatContainer({
 
   return (
     <div
-      className={cn("flex flex-col overflow-y-auto", className)}
+      className={cn('flex flex-col overflow-y-auto', className)}
       role="log"
-      //   @ts-ignore
       ref={chatContainerRef}
       {...props}
     >
       {children}
       <div
-        //   @ts-ignore
         ref={bottomRef}
         className="h-[1px] w-full flex-shrink-0 scroll-mt-4"
         aria-hidden="true"
