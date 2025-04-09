@@ -12,14 +12,19 @@ export async function POST(req: Request) {
 
   const result = streamText({
     model: mistral('mistral-large-latest'),
-    system: `You are a helpful assistant for the GITEX exhibition. Your role is to help users find information about exhibitors, their products, and sectors.
+    system: `You are a helpful assistant for the GITEX AFRICA event. Your role is to help users find information about exhibitors, their products, and sectors.
     
     When users ask about exhibitors or companies:
     1. ALWAYS use the searchExhibitors tool to find relevant information
     2. After getting the results, format them into a clear, readable response
     3. summarize the results in a few sentences, for the descriptions for example don't list all the products and services, just summarize the main ones
-    5. if the user specifies a country make sure to use it in the filters in the searchExhibitors tool
+    5. if the user specifies a country or hall number make sure to use it in the filters in the searchExhibitors tool
     6. for the query, you can always use the user's query as a base and add more details to it, so the search is more accurate and can return more relevant results.
+    
+    When users ask for more results or "suggest more":
+    1. Keep track of how many exhibitors you've already shown
+    2. Use the SAME search query but add a skip parameter equal to the number of exhibitors already shown
+    3. Make it clear that you're showing additional results for their previous query
     
     Format your responses in markdown:
     - Use "**Company Name**" for company names
@@ -30,14 +35,15 @@ export async function POST(req: Request) {
     - Use proper line breaks between sections
     - Start with a brief intro summarizing the number of relevant exhibitors found
     - Use a divider line to separate each exhibitor
-    - if you you used the country filter, and you didn't find any exhibitors, you can always retry calling the tool without the country filter, but make sure to mention that you did that
+    - if you you used the country or hall filter, and you didn't find any exhibitors, you can always retry calling the tool without those filters, but make sure to mention that you did that
+    
     Example format:
     I found {N} exhibitors matching your query:
 
     **Company Name**
-    🏢 Stand: H7-B25\n
-    🌍 Country: United Arab Emirates\n
-    
+    🏢 Stand: H7-B25
+    🌍 Country: United Arab Emirates
+
     {Description if available}
     
     🛠️ Products:
@@ -57,10 +63,24 @@ export async function POST(req: Request) {
         parameters: z.object({
           query: z.string().describe('The search query to find relevant exhibitors'),
           country: z.string().optional().describe('Filter by country in full format (in english)'),
+          hall: z.number().optional().describe('Filter by hall number'),
+          skip: z
+            .number()
+            .optional()
+            .describe(
+              'Number of records to skip for pagination (use when user asks for more results)'
+            ),
         }),
-        execute: async ({ query, country }) => {
-          console.log('🌐 Searching exhibitors with country:', country);
-          const exhibitors = await searchExhibitors(query, { country });
+        execute: async ({ query, country, hall, skip = 0 }) => {
+          console.log(
+            '🌐 Searching exhibitors with country:',
+            country,
+            'hall:',
+            hall,
+            'skip:',
+            skip
+          );
+          const exhibitors = await searchExhibitors(query, { country, hall, skip });
           return exhibitors;
         },
       }),
@@ -72,7 +92,14 @@ export async function POST(req: Request) {
 
 const model = mistral.embedding('mistral-embed');
 
-async function searchExhibitors(query: string, filters: { country?: string } = {}) {
+async function searchExhibitors(
+  query: string,
+  filters: {
+    country?: string;
+    hall?: number;
+    skip?: number;
+  } = {}
+) {
   try {
     const { embeddings: queryEmbeddings } = await embedMany({
       model,
@@ -86,6 +113,12 @@ async function searchExhibitors(query: string, filters: { country?: string } = {
     if (filters.country) {
       conditions.push(ilike(exhibitors.country, `%${filters.country}%`));
     }
+
+    if (filters.hall) {
+      conditions.push(sql`${exhibitors.stand_number} ~* ${`Hall\\s*${filters.hall}\\b`}`);
+    }
+
+    const skip = filters.skip || 0;
 
     const similarExhibitors = await db
       .select({
@@ -102,7 +135,8 @@ async function searchExhibitors(query: string, filters: { country?: string } = {
       .innerJoin(embeddings, sql`${exhibitors.id} = ${embeddings.exhibitor_id}`)
       .where(conditions.length > 1 ? and(...conditions) : conditions[0])
       .orderBy(desc(similarity))
-      .limit(5);
+      .limit(5)
+      .offset(skip);
 
     return similarExhibitors.map(exhibitor => ({
       ...exhibitor,
