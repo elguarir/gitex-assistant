@@ -40,7 +40,6 @@
     "@react-aria/visually-hidden": "3.8.20",
     "ai": "^4.3.2",
     "clsx": "2.1.1",
-    "dotenv": "^16.4.7",
     "drizzle-kit": "^0.30.6",
     "drizzle-orm": "^0.41.0",
     "framer-motion": "11.13.1",
