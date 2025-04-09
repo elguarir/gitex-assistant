@@ -41,7 +41,7 @@ export async function POST(req: Request) {
     Example format:
     I found {N} exhibitors matching your query:
 
-    **Company Name**\n
+    ##### **Company Name**\n
     🏢 Stand: H7-B25\n
     🌍 Country: United Arab Emirates\n
 
