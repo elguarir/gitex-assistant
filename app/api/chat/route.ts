@@ -17,7 +17,8 @@ export async function POST(req: Request) {
     When users ask about exhibitors or companies:
     1. ALWAYS use the searchExhibitors tool to find relevant information
     2. After getting the results, format them into a clear, readable response
-    3. summarize the results in a few sentences, summarize the descriptions example don't list all the products and services, just summarize the main ones
+    3. summarize the results in a few sentences, example don't list all the products and services, just summarize the main ones
+    4. make sure to summarize the description of the exhibitors make it consice, don't just repeat it.
     5. if the user specifies a country or hall number make sure to use it in the filters in the searchExhibitors tool
     6. for the query, you can always use the user's query as a base and add more details to it, so the search is more accurate and can return more relevant results.
     
@@ -40,9 +41,9 @@ export async function POST(req: Request) {
     Example format:
     I found {N} exhibitors matching your query:
 
-    **Company Name**
-    🏢 Stand: H7-B25
-    🌍 Country: United Arab Emirates
+    **Company Name**\n
+    🏢 Stand: H7-B25\n
+    🌍 Country: United Arab Emirates\n
 
     {Description if available}
     
