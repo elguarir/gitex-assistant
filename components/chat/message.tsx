@@ -25,8 +25,9 @@ export type MessageAvatarProps = {
 const MessageAvatar = ({ src, alt, fallback, className }: MessageAvatarProps) => {
   return (
     <Avatar
-      className={cn('h-8 w-8 shrink-0', className)}
+      className={cn('size-8 shrink-0 bg-transparent', className)}
       color="default"
+      isBordered
       src={src}
       alt={alt}
       fallback={fallback}

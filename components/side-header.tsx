@@ -15,7 +15,7 @@ export default function SiteHeader() {
               aria-label="home"
               className="flex items-center space-x-2 focus-visible:ring-[1.5px] focus-visible:ring-focus outline-none"
             >
-              <Logo />
+              <Logo className="size-7" />
             </Link>
             <div className="flex gap-3">
               <ThemeSwitch />

@@ -4,6 +4,7 @@ import { Markdown } from '@/components/chat/markdown';
 import { Message, MessageAvatar, MessageContent } from '@/components/chat/message';
 import { PromptSuggestion } from '@/components/chat/prompt-suggestion';
 import { Button } from '@heroui/button';
+import { Loader, PulseDotLoader } from '@/components/chat/loader';
 import {
   PromptInput,
   PromptInputAction,
@@ -11,23 +12,21 @@ import {
   PromptInputTextarea,
 } from '@/components/chat/prompt-input';
 import { useChat } from 'ai/react';
-import { ArrowUp } from 'lucide-react';
-import { ChangeEvent, FormEvent } from 'react';
+import { ArrowUp, Square } from 'lucide-react';
 
 export function GitexChat() {
-  const { messages, input, setInput, handleSubmit, isLoading } = useChat();
-
-  const handleSuggestionClick = (suggestion: string) => {
-    const e = {
-      target: { value: suggestion },
-    } as ChangeEvent<HTMLInputElement>;
-
-    setInput(suggestion);
-  };
+  const { messages, input, setInput, handleSubmit, status, stop } = useChat();
+  //   Hook status:
+  // submitted: The message has been sent to the API and we're awaiting the start of the response stream.
+  // streaming: The response is actively streaming in from the API, receiving chunks of data.
+  // ready: The full response has been received and processed; a new user message can be submitted.
+  // error: An error occurred during the API request, preventing successful completion.
+  const isLoading = status === 'submitted' || status === 'streaming';
+  const showStopButton = status === 'streaming';
 
   return (
-    <div className="relative flex flex-col h-full max-w-3xl mx-auto px-3 pt-10">
-      <div className="flex-1 overflow-y-auto mb-[140px]">
+    <div className="relative flex flex-col h-full max-w-3xl mx-auto pt-7">
+      <div className="flex-1 overflow-y-auto mb-[140px] p-3">
         <div className="flex w-full space-y-6 flex-col">
           {messages.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center p-6 text-center">
@@ -36,30 +35,24 @@ export function GitexChat() {
                 Ask me anything about GITEX exhibitors, their products, or sectors.
               </p>
               <div className="flex w-full max-w-md flex-col gap-2">
-                <PromptSuggestion
-                  onClick={() => handleSuggestionClick('Show me exhibitors in the AI sector')}
-                >
+                <PromptSuggestion onClick={() => setInput('Show me exhibitors in the AI sector')}>
                   Show me exhibitors in the AI sector
                 </PromptSuggestion>
                 <PromptSuggestion
                   onClick={() =>
-                    handleSuggestionClick('Which companies are showcasing cybersecurity solutions?')
+                    setInput('Which companies are showcasing cybersecurity solutions?')
                   }
                 >
                   Which companies are showcasing cybersecurity solutions?
                 </PromptSuggestion>
                 <PromptSuggestion
-                  onClick={() =>
-                    handleSuggestionClick('Find exhibitors from the United Arab Emirates')
-                  }
+                  onClick={() => setInput('Find exhibitors from the United Arab Emirates')}
                 >
                   Find exhibitors from the United Arab Emirates
                 </PromptSuggestion>
                 <PromptSuggestion
                   onClick={() =>
-                    handleSuggestionClick(
-                      'Tell me about companies working on blockchain technology'
-                    )
+                    setInput('Tell me about companies working on blockchain technology')
                   }
                 >
                   Tell me about companies working on blockchain technology
@@ -76,7 +69,7 @@ export function GitexChat() {
                   className={message.role === 'user' ? 'justify-end' : 'justify-start'}
                 >
                   {isAssistant && (
-                    <MessageAvatar src="/avatars/ai.png" alt="AI Assistant" fallback="AI" />
+                    <MessageAvatar src="/logo.svg" alt="AI Assistant" fallback="AI" />
                   )}
                   <div className="max-w-[90%] flex-1">
                     {isAssistant ? (
@@ -92,6 +85,14 @@ export function GitexChat() {
                 </Message>
               );
             })
+          )}
+          {status === 'submitted' && (
+            <Message className="justify-start">
+              <MessageAvatar src="/logo.svg" alt="AI Assistant" fallback="AI" />
+              <div className="flex items-center h-8 px-4">
+                <PulseDotLoader className="text-default" />
+              </div>
+            </Message>
           )}
         </div>
       </div>
@@ -113,7 +114,16 @@ export function GitexChat() {
                 spellCheck={false}
                 disabled={isLoading}
               />
+
               <PromptInputActions className="justify-end pt-2">
+                {showStopButton && (
+                  <PromptInputAction tooltip="Stop" onClick={stop}>
+                    <Button variant="faded" size="sm" isIconOnly radius="full">
+                      <Square className="size-4" />
+                    </Button>
+                  </PromptInputAction>
+                )}
+
                 <PromptInputAction tooltip={isLoading ? 'Processing...' : 'Send message'}>
                   <Button
                     variant="bordered"
