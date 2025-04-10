@@ -132,6 +132,12 @@ export function GitexChat() {
     setFiles([]);
   };
 
+  // Handler for Enter key submission from the textarea
+  const handleEnterSubmit = () => {
+    const fakeEvent = { preventDefault: () => {} } as React.FormEvent<HTMLFormElement>;
+    handleFormSubmit(fakeEvent);
+  };
+
   return (
     <div className="relative flex flex-col h-full max-w-3xl mx-auto pt-7">
       <div className="flex-1 overflow-y-auto mb-[140px] p-3">
@@ -213,7 +219,7 @@ export function GitexChat() {
             <FileUpload onFilesAdded={handleFilesAdded} accept=".pdf">
               <PromptInput
                 value={input}
-                onSubmit={() => {}}
+                onSubmit={handleEnterSubmit}
                 isLoading={isLoading}
                 maxHeight={80}
                 onValueChange={setInput}
