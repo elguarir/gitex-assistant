@@ -48,7 +48,7 @@ export async function uploadPdfToS3(file: File): Promise<UploadResult> {
 
     // Upload to S3
     const command = new PutObjectCommand({
-      Bucket: process.env.AWS_BUCKET_NAME!,
+      Bucket: process.env.TEBI_BUCKET_NAME!,
       Key: key,
       Body: buffer,
       ContentType: file.type,
@@ -57,7 +57,7 @@ export async function uploadPdfToS3(file: File): Promise<UploadResult> {
     await s3Client.send(command);
 
     // Create the file URL for Tebi storage
-    const url = `${process.env.AWS_S3_ENDPOINT}/${process.env.AWS_BUCKET_NAME}/${key}`;
+    const url = `${process.env.TEBI_S3_ENDPOINT}/${process.env.TEBI_BUCKET_NAME}/${key}`;
 
     return {
       success: true,
