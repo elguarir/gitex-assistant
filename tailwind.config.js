@@ -68,6 +68,7 @@ const config = {
       },
     }),
     require('@tailwindcss/typography'),
+    require('tailwindcss-animate'),
   ],
 };
 

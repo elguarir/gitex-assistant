@@ -115,7 +115,7 @@ function PromptInputTextarea({
         'text-default-600 placeholder:text-default-400 min-h-[10px] w-full resize-none border-none bg-transparent shadow-none outline-none focus-visible:ring-0 focus-visible:ring-offset-0',
         className
       )}
-      rows={1}
+      rows={2}
       disabled={disabled}
       {...props}
     />
@@ -141,9 +141,10 @@ function PromptInputAction({
   children,
   className,
   content,
+  closeDelay = 100,
   placement = 'top',
   color = 'default',
-  showArrow = true,
+  showArrow = false,
   ...props
 }: PromptInputActionProps) {
   const { disabled } = usePromptInput();
@@ -155,8 +156,9 @@ function PromptInputAction({
         color={color}
         placement={placement}
         showArrow={showArrow}
-        {...props}
         isDisabled={disabled}
+        closeDelay={closeDelay}
+        {...props}
       >
         {children}
       </Tooltip>

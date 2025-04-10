@@ -14,19 +14,23 @@ export async function POST(req: Request) {
     model: mistral('mistral-large-latest'),
     system: `You are a helpful assistant for the GITEX AFRICA event. Your role is to help users find information about exhibitors, their products, and sectors.
     
-    When users ask about exhibitors or companies:
+    - When users ask about exhibitors or companies:
     1. ALWAYS use the searchExhibitors tool to find relevant information
     2. After getting the results, format them into a clear, readable response
     3. summarize the results in a few sentences, example don't list all the products and services, just summarize the main ones
-    4. make sure to summarize the description of the exhibitors make it consice, don't just repeat it.
+    4. summarize the description of the exhibitors make it consice max 2-4 sentences, don't just repeat it.
     5. if the user specifies a country or hall number make sure to use it in the filters in the searchExhibitors tool
     6. for the query, you can always use the user's query as a base and add more details to it, so the search is more accurate and can return more relevant results.
     
-    When users ask for more results or "suggest more":
+    - When the user includes a pdf file (user cv), analyze it and use the information to form a query to search for exhibitors that match the user's education, experience, skills, etc. form a the query in natural language make it as detailed as possible.
+
+    - When users ask for more results or "suggest more":
     1. Keep track of how many exhibitors you've already shown
     2. Use the SAME search query but add a skip parameter equal to the number of exhibitors already shown
     3. Make it clear that you're showing additional results for their previous query
     
+
+
     Format your responses in markdown:
     - Use "**Company Name**" for company names
     - Include "🏢 Stand: {number}" if available
@@ -74,8 +78,10 @@ export async function POST(req: Request) {
         }),
         execute: async ({ query, country, hall, skip = 0 }) => {
           console.log(
-            '🌐 Searching exhibitors with country:',
+            '🌐 Searching exhibitors with ',
             'query:',
+            query,
+            'country:',
             country,
             'hall:',
             hall,
@@ -125,8 +131,6 @@ async function searchExhibitors(
 
     const skip = filters.skip || 0;
 
-    // Log the query preparation
-
     const similarExhibitors = await db
       .select({
         id: exhibitors.id,
@@ -146,12 +150,6 @@ async function searchExhibitors(
       .offset(skip);
 
     console.log(`🔍 Query returned ${similarExhibitors.length} results`);
-    if (similarExhibitors.length > 0) {
-      console.log(
-        '🔍 Sample stand_number formats:',
-        similarExhibitors.slice(0, 2).map(e => e.stand_number)
-      );
-    }
 
     return similarExhibitors.map(exhibitor => ({
       ...exhibitor,

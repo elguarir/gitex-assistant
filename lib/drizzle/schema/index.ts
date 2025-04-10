@@ -79,6 +79,18 @@ export const embeddings = pgTable(
   ]
 );
 
+// CV Uploads table
+export const cvUploads = pgTable('cv_uploads', {
+  id: serial('id').primaryKey(),
+  filename: varchar('filename', { length: 255 }).notNull(),
+  fileUrl: text('file_url').notNull(),
+  s3Key: text('s3_key').notNull(),
+  userId: varchar('user_id', { length: 100 }).notNull(),
+  processed: boolean('processed').default(false),
+  embedding: vector('embedding', { dimensions: 1024 }),
+  ...timestamps,
+});
+
 export const sectorsRelations = relations(sectors, ({ one, many }) => ({
   parent: one(sectors, {
     fields: [sectors.parent_id],
@@ -115,3 +127,7 @@ export type NewExhibitorSector = typeof exhibitorSectors.$inferInsert;
 
 export type Embedding = typeof embeddings.$inferSelect;
 export type NewEmbedding = typeof embeddings.$inferInsert;
+
+// Define types for CV uploads
+export type CVUpload = typeof cvUploads.$inferSelect;
+export type NewCVUpload = typeof cvUploads.$inferInsert;
