@@ -1,4 +1,4 @@
-import SiteHeader from '@/components/side-header';
+import SiteHeader from '@/components/site-header';
 import { Metadata } from 'next';
 import { GitexChat } from './gitex-chat';
 

@@ -19,7 +19,13 @@ export default function SiteHeader() {
             </Link>
             <div className="flex gap-3">
               <ThemeSwitch />
-              <Button isIconOnly variant="light">
+              <Button
+                isIconOnly
+                variant="light"
+                as="a"
+                href="https://github.com/elguarir/gitex-assistant"
+                target="_blank"
+              >
                 <GithubIcon className="h-5 w-5" />
               </Button>
               <Button isIconOnly variant="light">
