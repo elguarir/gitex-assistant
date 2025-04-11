@@ -4,15 +4,13 @@ import { embedMany, streamText, tool } from 'ai';
 import { z } from 'zod';
 import { db } from '@/lib/drizzle/db';
 import { cosineDistance, desc, gt, sql, ilike, and, SQL } from 'drizzle-orm';
-import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
-  try {
-    const { messages } = await req.json();
+  const { messages } = await req.json();
 
-    const result = streamText({
-      model: mistral('mistral-large-latest'),
-      system: `You are a helpful assistant for the GITEX AFRICA event. Your role is to help users find information about exhibitors, their products, and sectors.
+  const result = streamText({
+    model: mistral('mistral-large-latest'),
+    system: `You are a helpful assistant for the GITEX AFRICA event. Your role is to help users find information about exhibitors, their products, and sectors.
     
     - When users ask about exhibitors or companies:
     1. ALWAYS use the searchExhibitors tool to find relevant information
@@ -60,49 +58,42 @@ export async function POST(req: Request) {
     - LinkedIn: {url}
 
     If no exhibitors are found, respond: "I apologize, but I couldn't find any exhibitors matching your query. Could you please try rephrasing or provide more specific information about what you're looking for?"`,
-      messages,
-      maxSteps: 4,
-      tools: {
-        searchExhibitors: tool({
-          description: 'Search for exhibitors using semantic similarity',
-          parameters: z.object({
-            query: z.string().describe('The search query to find relevant exhibitors'),
-            country: z
-              .string()
-              .optional()
-              .describe('Filter by country in full format (in english)'),
-            hall: z.number().optional().describe('Filter by hall number'),
-            skip: z
-              .number()
-              .optional()
-              .describe(
-                'Number of records to skip for pagination (use when user asks for more results)'
-              ),
-          }),
-          execute: async ({ query, country, hall, skip = 0 }) => {
-            console.log(
-              '🌐 Searching exhibitors with ',
-              'query:',
-              query,
-              'country:',
-              country,
-              'hall:',
-              hall,
-              'skip:',
-              skip
-            );
-            const exhibitors = await searchExhibitors(query, { country, hall, skip });
-            return exhibitors;
-          },
+    messages,
+    maxSteps: 4,
+    tools: {
+      searchExhibitors: tool({
+        description: 'Search for exhibitors using semantic similarity',
+        parameters: z.object({
+          query: z.string().describe('The search query to find relevant exhibitors'),
+          country: z.string().optional().describe('Filter by country in full format (in english)'),
+          hall: z.number().optional().describe('Filter by hall number'),
+          skip: z
+            .number()
+            .optional()
+            .describe(
+              'Number of records to skip for pagination (use when user asks for more results)'
+            ),
         }),
-      },
-    });
+        execute: async ({ query, country, hall, skip = 0 }) => {
+          console.log(
+            '🌐 Searching exhibitors with ',
+            'query:',
+            query,
+            'country:',
+            country,
+            'hall:',
+            hall,
+            'skip:',
+            skip
+          );
+          const exhibitors = await searchExhibitors(query, { country, hall, skip });
+          return exhibitors;
+        },
+      }),
+    },
+  });
 
-    return result.toDataStreamResponse();
-  } catch (error) {
-    console.error('Error in chat API:', error);
-    return NextResponse.json({ error: 'Internal Server Error', message: error }, { status: 500 });
-  }
+  return result.toDataStreamResponse();
 }
 
 const model = mistral.embedding('mistral-embed');

@@ -57,7 +57,7 @@ export default function Home() {
   return (
     <div className="relative font-sans flex flex-col h-full">
       <SiteHeader />
-      <main className="flex-1 bg-white dark:bg-transparent">
+      <main className="flex-1">
         <div className="mx-auto h-full pt-16 md:pt-4">
           <GitexChat />
         </div>

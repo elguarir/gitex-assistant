@@ -13,12 +13,12 @@ function generateUUID(): string {
 
 // Configure S3 client
 const s3Client = new S3Client({
-  region: process.env.TEBI_REGION!,
+  region: process.env.AWS_REGION!,
   credentials: {
-    accessKeyId: process.env.TEBI_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.TEBI_SECRET_ACCESS_KEY!,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
   },
-  endpoint: process.env.TEBI_S3_ENDPOINT!,
+  endpoint: process.env.AWS_S3_ENDPOINT!,
 });
 
 // Define response type
@@ -48,7 +48,7 @@ export async function uploadPdfToS3(file: File): Promise<UploadResult> {
 
     // Upload to S3
     const command = new PutObjectCommand({
-      Bucket: process.env.TEBI_BUCKET_NAME!,
+      Bucket: process.env.AWS_BUCKET_NAME!,
       Key: key,
       Body: buffer,
       ContentType: file.type,
@@ -57,7 +57,7 @@ export async function uploadPdfToS3(file: File): Promise<UploadResult> {
     await s3Client.send(command);
 
     // Create the file URL for Tebi storage
-    const url = `${process.env.TEBI_S3_ENDPOINT}/${process.env.TEBI_BUCKET_NAME}/${key}`;
+    const url = `${process.env.AWS_S3_ENDPOINT}/${process.env.AWS_BUCKET_NAME}/${key}`;
 
     return {
       success: true,
