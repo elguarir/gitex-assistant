@@ -4,14 +4,14 @@ This application provides assistive information about GITEX exhibitors, allowing
 
 ## Technologies Used
 
-- [Next.js 14](https://nextjs.org/docs/getting-started)
+- [Next.js 15](https://nextjs.org/docs/getting-started)
 - [Drizzle ORM](https://orm.drizzle.team/) - SQL ORM for TypeScript
 - [PostgreSQL](https://www.postgresql.org/) with pgvector extension for vector embeddings
 - [HeroUI v2](https://heroui.com/) - UI component library
 - [Tailwind CSS](https://tailwindcss.com/)
 - [TypeScript](https://www.typescriptlang.org/)
 - [Framer Motion](https://www.framer.com/motion/)
-- [Mistral AI](https://mistral.ai/) for embeddings
+- [Mistral AI](https://mistral.ai/) and [AI SDK](https://sdk.vercel.ai/getting-started) for embeddings and ai features.
 
 ## Features
 
